@@ -1,0 +1,53 @@
+import math
+import numpy as np
+
+#networks = int(input('enter the number of networks'))
+noHosts = int(input('enter the number of hosts: '))
+
+host_bits = math.ceil(math.log(noHosts,2))
+
+print('hostbit is : ', host_bits)
+
+if  (host_bits % 8) == 0:
+  supernet_bit = 0
+else:
+  supernet_bit = 8 - (host_bits % 8)
+
+print(' no of supernet: ', 2**supernet_bit)
+
+mask = '1'*(32-host_bits) + '0'*host_bits
+Mask = ''
+for i in range(4):
+  Mask += str(int("".join(mask[i*8:i*8+8]),2))
+  Mask += '.'
+
+print('mask is : ',Mask)
+
+ip_add = (input('enter an ip address: ')).split('.');
+ip_bit = ''
+for i in range(4):
+  ip_bit += format(int(ip_add[i]),'08b')
+
+s_add = ''
+for i in range(32):
+  if mask[i] == '1' and ip_bit[i] == '1':
+    s_add += '1'
+
+  else:
+    s_add += '0'
+
+
+s_ip = ''
+for i in range(4):
+  s_ip += str(int("".join(s_add[i*8:i*8+8]),2))
+  s_ip += '.'
+
+print('Starting address : ', s_ip)
+
+e_ip = ''
+e_add = s_add[:-host_bits] + '1'*host_bits
+for i in range(4):
+  e_ip += str(int("".join(e_add[i*8:i*8+8]),2))
+  e_ip += '.'
+
+print('Broadcast address: ', e_ip)
